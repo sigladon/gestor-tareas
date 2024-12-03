@@ -5,11 +5,11 @@ nav {
   top: 0;
   height: 100vh;
   width: 250px;
-  background-color: #1e1e2f;
+  background-color: #efefff;
   padding-top: 20px;
   transition: transform 0.3s ease-in-out;
   transform: translateX(0);
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 0 5px rgba(136, 159, 210, 0.456);
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -34,7 +34,7 @@ nav ul li {
 
 /* Link styling */
 nav ul li a {
-  color: #d1d1e9;
+  color: #000078;
   font-size: 1.1em;
   text-decoration: none;
   padding: 15px 20px;
@@ -45,14 +45,14 @@ nav ul li a {
 
 /* Hover effect */
 nav ul li a:hover {
-  background-color: #3a3a5a;
-  color: #ffffff;
+  background-color: #bfbfff;
+  color: #00177d;
 }
 
 /* Active link styling */
 nav ul li a.active {
-  background-color: #4a4a6a;
-  color: #ffffff;
+  background-color: #a0affd;
+  color: #00177d;
   font-weight: bold;
 }
 
@@ -62,7 +62,7 @@ nav ul li a::after {
   display: block;
   height: 2px;
   width: 0;
-  background: #ffffff;
+  background: #0b39a4;
   transition: width 0.3s ease;
   margin-top: 5px;
 }

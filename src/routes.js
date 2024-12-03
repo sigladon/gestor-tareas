@@ -1,8 +1,7 @@
-import Profile from "./pages/Profile";
-import Contact from "./pages/Contact";
-import Tasks from "./pages/Tasks";
 import Settings from "./pages/Settings";
-import Home from "./pages/Home";
+
+import Home from "./pages/Home/page";
+import Dropdowns from "./pages/Dropdowns/page";
 
 export const routes = [
   {
@@ -10,25 +9,16 @@ export const routes = [
     url: "/",
     component: Home,
   },
+
   {
-    title: "Tasks",
-    url: "/Tasks",
-    component: Tasks,
+    title: "Manage Dropdowns",
+    url: "/dropdowns",
+    component: Dropdowns,
   },
+
   {
     title: "Settings",
     url: "/settings",
     component: Settings,
-  },
-  {
-    title: "Contact",
-    url: "/contact",
-    component: Contact,
-  },
-
-  {
-    title: "Profile",
-    url: "/profile",
-    component: Profile,
   },
 ];
