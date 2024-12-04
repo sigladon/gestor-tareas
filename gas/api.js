@@ -1,3 +1,44 @@
+const executeAction = ({
+  action,
+  sheetName,
+  id = null,
+  data = null,
+  headers = null,
+}) => {
+  let res = null;
+  try {
+    const orm = new ORM(sheetName, headers);
+
+    switch (action) {
+      case "add":
+        res = orm.create(data);
+
+        break;
+      case "update":
+        res = orm.updateById(id, data);
+
+        break;
+      case "delete":
+        res = orm.deleteById(id);
+
+        break;
+      case "getAll":
+        res = orm.readAll();
+        break;
+      case "getOne":
+        res = orm.readById(id);
+        break;
+      default:
+        return false;
+    }
+
+    return JSON.stringify(res);
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 const getSheetData = (name) => {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name);
   const dataRange = sheet.getDataRange();
