@@ -10,6 +10,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 const SmartTable = ({ schema, open, setOpen }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  console.log("schema:", schema);
   const headers = schema.fields.map(({ dataIndex }) => dataIndex);
 
   const [initialValues, setInitialValues] = useState({});

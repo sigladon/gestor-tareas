@@ -130,10 +130,7 @@ const FormModal = ({
                     <Select
                       style={{ width: 300 }}
                       placeholder={`Select ${title}`}
-                      options={dd[ddSource].map((item) => ({
-                        label: item.name,
-                        value: item.name,
-                      }))}
+                      options={options.map((o) => ({ label: o, value: o }))}
                     />
                   </Form.Item>
                 );
