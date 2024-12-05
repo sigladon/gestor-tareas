@@ -4,6 +4,7 @@ import {
   DatePicker,
   Form,
   Input,
+  InputNumber,
   Modal,
   Radio,
   Divider,
@@ -124,6 +125,18 @@ const FormModal = ({
           .filter((c) => c.dataIndex)
           .map(({ key, title, rules, type, options, ddSource }) => {
             switch (type) {
+              case "text":
+                return (
+                  <Form.Item key={key} name={key} label={title} rules={rules}>
+                    <Input />
+                  </Form.Item>
+                );
+              case "number":
+                return (
+                  <Form.Item key={key} name={key} label={title} rules={rules}>
+                    <InputNumber />
+                  </Form.Item>
+                );
               case "select":
                 return (
                   <Form.Item key={key} name={key} label={title} rules={rules}>
