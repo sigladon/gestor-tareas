@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Tabs } from "antd";
 import SmartTable from "@/components/SmartTable";
 import schema from "./schema";
-import taskSchema from "@/pages/Home/schema";
-import budgetSchema from "@/pages/Budgeting/schema";
+import taskSchema from "@/pages/Tasks/schema";
+import budgetSchema from "@/pages/Meetings/schema";
 // import someOtherSchema from "@/pages/Home/someOtherSchema";
 
 const Dropdowns = () => {

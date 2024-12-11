@@ -1,4 +1,4 @@
-import columns from "./Home/schema";
+import columns from "./Tasks/schema";
 
 const Settings = () => {
   return <h2>Settings</h2>;

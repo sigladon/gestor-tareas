@@ -5,7 +5,7 @@ nav {
   top: 0;
   height: 100vh;
   width: 250px;
-  background-color: #efefff;
+  background-color: #002856;
   padding-top: 20px;
   transition: transform 0.3s ease-in-out;
   transform: translateX(0);
@@ -34,7 +34,7 @@ nav ul li {
 
 /* Link styling */
 nav ul li a {
-  color: #000078;
+  color: #ffffff;
   font-size: 1.1em;
   text-decoration: none;
   padding: 15px 20px;
@@ -45,14 +45,14 @@ nav ul li a {
 
 /* Hover effect */
 nav ul li a:hover {
-  background-color: #bfbfff;
-  color: #00177d;
+  background-color: #0f44c0;
+  color: white;
 }
 
 /* Active link styling */
 nav ul li a.active {
-  background-color: #a0affd;
-  color: #00177d;
+  background-color: #0b39a4c2;
+  color: white;
   font-weight: bold;
 }
 
@@ -69,6 +69,14 @@ nav ul li a::after {
 
 nav ul li a:hover::after {
   width: 100%;
+}
+
+.novaName {
+  color: white;
+  font-size: 28px;
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 700;
+  font-style: normal;
 }
 
 

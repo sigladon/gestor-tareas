@@ -7,11 +7,7 @@ export const Navbar = () => {
   return (
     <nav>
       <div style={{ margin: 10 }}>
-        <img
-          src="https://drive.google.com/thumbnail?id=1eUwEZQwika0OzusArZe7-cJNUlri2Bzm&sz=w1000"
-          alt="logo"
-          width={48}
-        />
+        <h1 className={"novaName"}>NOVA</h1>
       </div>
       <ul>
         {routes.map((route) => (

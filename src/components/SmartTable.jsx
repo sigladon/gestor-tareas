@@ -7,10 +7,15 @@ import { toJsonArray } from "@/lib/utils";
 import dayjs from "dayjs";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-const SmartTable = ({ schema, open, setOpen }) => {
+const SmartTable = ({
+  schema,
+  open,
+  setOpen,
+  modalMode, // Recibe el modo del modal
+  selectedRecord, // Recibe el registro seleccionado para editar
+}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log("schema:", schema);
   const headers = schema.fields.map(({ dataIndex }) => dataIndex);
 
   const [initialValues, setInitialValues] = useState({});
@@ -70,7 +75,6 @@ const SmartTable = ({ schema, open, setOpen }) => {
           headers: headers,
         });
         setData(toJsonArray(JSON.parse(records)));
-        console.log("Parsed data:", data);
         setLoading(false);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -81,7 +85,6 @@ const SmartTable = ({ schema, open, setOpen }) => {
 
   const onCreate = async (values) => {
     const formValues = JSON.parse(JSON.stringify(values));
-    console.log("Received values of form: ", formValues);
     setLoading(true);
     executeAction({
       action: formValues.id ? "update" : "add",
@@ -91,7 +94,6 @@ const SmartTable = ({ schema, open, setOpen }) => {
       headers: headers,
     })
       .then((res) => {
-        console.log("res:", res);
         setData(toJsonArray(JSON.parse(res)));
         setLoading(false);
       })
@@ -101,7 +103,7 @@ const SmartTable = ({ schema, open, setOpen }) => {
   };
 
   const handleEdit = (values) => {
-    // onvert date string to dayjs date object for datepicker by mappng over columns and checking date type
+    // Convertir las fechas si es necesario y configurar los valores iniciales
     const dateColumns = schema.fields.filter(
       (column) => column.type === "date"
     );
@@ -110,10 +112,19 @@ const SmartTable = ({ schema, open, setOpen }) => {
         ? dayjs(values[column.dataIndex])
         : null;
     });
-    console.log("Initial Values passed to the Edit Form: ", values);
+  
+    // Al editar, configuramos los valores iniciales
     setInitialValues(values);
-    setOpen(true);
+    setOpen(true);  // Abrir el modal
   };
+  
+  useEffect(() => {
+    if (!open) {
+      // Si el modal se cierra, resetear los valores iniciales
+      setInitialValues({});
+    }
+  }, [open]);  // Resetear cuando el modal se cierra
+  
 
   return (
     <>
@@ -123,12 +134,26 @@ const SmartTable = ({ schema, open, setOpen }) => {
         setIsModalOpen={setOpen}
         initialValues={initialValues}
         columns={schema.fields}
+        modalMode={modalMode} // Pasa el modo del modal
       />
-      <Table columns={columns2} dataSource={data} loading={loading} />
+      <Table 
+        columns={columns2}
+        pagination={{
+          position: ['bottomCenter'],
+        }}
+        dataSource={data}
+        loading={loading} 
+      />
     </>
   );
 };
+
 SmartTable.propTypes = {
-  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  schema: PropTypes.object.isRequired, // Se requiere un esquema de columnas
+  open: PropTypes.bool.isRequired, // Se requiere el estado de apertura del modal
+  setOpen: PropTypes.func.isRequired, // Función para cambiar el estado del modal
+  modalMode: PropTypes.oneOf(["create", "edit"]).isRequired, // El modo del modal (crear o editar)
+  selectedRecord: PropTypes.object, // El registro seleccionado para editar
 };
+
 export default SmartTable;

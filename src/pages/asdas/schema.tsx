@@ -6,21 +6,21 @@ const schema = {
   sheetName: 'Records',
   fields : [
     {
-      title: '📝 Task',
+      title: '📝 Tarea',
       dataIndex: 'task',
       key: 'task',
       rules: [{ required: true, message: 'Please input task name' }],
       type: 'text',
     },
     {
-      title: '📁 Project',
-      dataIndex: 'project',
-      key: 'project',
+      title: '👤Asignar a',
+      dataIndex: 'assignedTo',
+      key: 'assignedTo',
       type: 'creatable_select',
-      ddSource: 'DD_Projects',
+      ddSource: 'DD_Users',
     },
     {
-      title: '📅 Due Date',
+      title: '📅 Fecha Limite',
       dataIndex: 'dueDate',
       key: 'dueDate',
       type: 'date',
@@ -46,35 +46,7 @@ const schema = {
       }
     },
     {
-      title: '⏳ Start Date',
-      dataIndex: 'startDate',
-      key: 'startDate',
-      type: 'date',
-      render: (startDate) => {
-        if(!startDate) return null;
-        return (
-          <Tag color="blue" key={startDate}>
-            {new Date(startDate).toLocaleDateString()}
-          </Tag>
-        );
-      }
-    },
-    {
-      title: '🏁 End Date',
-      dataIndex: 'endDate',
-      key: 'endDate',
-      type: 'date',
-      render: (endDate) => {
-        if(!endDate) return null;
-        return (
-          <Tag color="blue" key={endDate}>
-            {new Date(endDate).toLocaleDateString()}
-          </Tag>
-        );
-      }
-    },
-    {
-      title: '📊 Status',
+      title: '📊 Estado:',
       dataIndex: 'status',
       key: 'status',
       type: 'radio',
@@ -97,25 +69,12 @@ const schema = {
             </Tag>
             {isOverdue && (
               <Tag color="red">
-                OVERDUE!
+                ¡ATRASADO!
               </Tag>
             )}
           </Space>
         );
       }
-    },
-    {
-      title: '🗒️ Notes',
-      dataIndex: 'notes',
-      key: 'notes',
-      type: 'textarea',
-    },
-    {
-      title: '👤 Assigned To',
-      dataIndex: 'assignedTo',
-      key: 'assignedTo',
-      type: 'creatable_select',
-      ddSource: 'DD_Users',
     },
   ]
 
