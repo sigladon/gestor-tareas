@@ -17,7 +17,7 @@ export function executeAction({ action, sheetName, id, data, headers }) {
   return new Promise((resolve, reject) => {
     google.script.run
       .withSuccessHandler((res) => {
-        console.log(res);
+        console.log("Datos obtenidos: ", res);
         resolve(res);
       })
       .withFailureHandler((msg) => {

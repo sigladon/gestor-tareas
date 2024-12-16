@@ -1,10 +1,12 @@
-import { Space, Tag } from 'antd';
+import { Space, Tag, Button, Select } from 'antd';
+import { } from '@ant-design/icons'
+// import { usestate } from 'react';
 
 import dayjs from 'dayjs';
 
 const schema = {
   sheetName: 'Tareas',
-  fields : [
+  fields: [
     {
       title: '📝 Descripción',
       dataIndex: 'Descripción',
@@ -24,10 +26,10 @@ const schema = {
       dataIndex: 'FechaLimite',
       key: 'FechaLimite',
       type: 'date',
-      sorter: (a,b) => dayjs(a.FechaLimite).diff(dayjs(b.FechaLimite)),
+      sorter: (a, b) => dayjs(a.FechaLimite).diff(dayjs(b.FechaLimite)),
       rules: [{ type: 'object' as const, required: false, message: 'Please select date' }],
-      render: (_,{FechaLimite,Estado}) => {
-        if(!FechaLimite) return null;
+      render: (_, { FechaLimite, Estado }) => {
+        if (!FechaLimite) return null;
         const today = dayjs();
         const dueDateObj = dayjs(FechaLimite);
         let color = 'green';
@@ -36,7 +38,7 @@ const schema = {
         } else if (dueDateObj.isBefore(today.add(7, 'day'), 'day')) {
           color = 'orange';
         }
-        if(Estado === 'Completada') {
+        if (Estado === 'Completada') {
           color = 'green';
         }
         return (
@@ -66,38 +68,73 @@ const schema = {
           value: 'Completada'
         },
       ],
-      filterMode: 'tree',
       onFilter: (value, record) => record.Estado.startsWith(value),
-      render: (_,{Estado, FechaLimite}) => {
-        let color = 'geekblue';
-        if (Estado === 'En Proceso') {
-          color = 'volcano';
-        }
-        if (Estado === 'Completada') {
-          color = 'green';
-        }
+      render: (_, { Estado, FechaLimite }) => {
+
+        const items = [
+          {
+            label: 'Pendiente',
+            value: 'Pendiente',
+          },
+          {
+            label: 'En Proceso',
+            value: 'En Proceso',
+          },
+          {
+            label: 'Completada',
+            value: 'Completada',
+          },
+        ];
+
+        const isOverdue = FechaLimite && Estado !== 'Completada' && dayjs(FechaLimite).isBefore(dayjs(), 'day');
         
-        const isOverdue = FechaLimite && Estado !== 'Done' && dayjs(FechaLimite).isBefore(dayjs(), 'day');
-        
-        return (
-          <Space>
-            <Tag color={color} key={Estado}>
-              {Estado}
+        const tagRender = (props) => {
+          const { label, value, closable, onClose } = props;
+          const onPreventMouseDown = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          };
+          return (
+            <Tag
+              color={value}
+              onMouseDown={onPreventMouseDown}
+              closable={closable}
+              onClose={onClose}
+              style={{
+                marginInlineEnd: 4,
+              }}
+            >
+              {label}
             </Tag>
+          );
+        };
+
+        return (
+          <>
+            <Select
+              defaultValue={Estado}
+              options={items}
+              tagRender={tagRender}
+              key="estado-select"
+            />
+            {/* <Dropdown
+              menu={{
+                items,
+              }}
+              placement="bottomLeft"
+            >
+              <Tag color={color} key={Estado}>
+                {Estado}
+              </Tag>
+            </Dropdown> */}
             {isOverdue && (
               <Tag color="red">
                 ¡ATRASADO!
               </Tag>
             )}
-          </Space>
+          </>
         );
       }
-    },
-    {
-      title: '🗒️ Anotaciones',
-      dataIndex: 'Anotaciones',
-      key: 'Anotaciones',
-      type: 'textarea',
     },
   ]
 

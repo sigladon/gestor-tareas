@@ -1,50 +1,82 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Space, Table, Tag, Popconfirm } from "antd";
+import { Space, Table, Tag, Popconfirm, Button, Modal } from "antd";
 import FormModal from "./Form";
 import { executeAction } from "@/server/gas";
 import { toJsonArray } from "@/lib/utils";
 import dayjs from "dayjs";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, SnippetsOutlined } from "@ant-design/icons";
+import NotesListModal from "./Notes"
 
 const SmartTable = ({
   schema,
-  open,
-  setOpen,
+  TasksModal,
+  NotesModal,
+  setTasksModalOpen,
+  setNotesModalOpen,
   modalMode, // Recibe el modo del modal
   selectedRecord, // Recibe el registro seleccionado para editar
 }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [currentNotes, setCurrentNotes] = useState("");
   const headers = schema.fields.map(({ dataIndex }) => dataIndex);
 
   const [initialValues, setInitialValues] = useState({});
 
-  const columns2 = [
-    ...schema.fields,
-    {
-      title: "Action",
-      key: "action",
+  const columns2 = [...schema.fields];
+  // Condicional con if
+  if (schema.sheetName === 'Tareas') {
+    columns2.push({
+      title: '🗒️ Anotaciones',
+      key: 'Anotaciones',
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined
-            onClick={() => handleEdit(record)}
+          <SnippetsOutlined
+            onClick={() => openNotesModal(record.Notas)}
             style={{ cursor: "pointer", color: "purple" }}
           />
-          <Popconfirm
-            title="Delete the task"
-            description="Are you sure to delete this task?"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
-          </Popconfirm>
         </Space>
       ),
       type: "action",
-    },
-  ];
+    });
+  }
+  
+  columns2.push({
+    title: "Acción",
+    key: "action",
+    render: (_, record) => (
+      <Space size="middle">
+        <EditOutlined
+          onClick={() => handleEdit(record)}
+          style={{ cursor: "pointer", color: "purple" }}
+        />
+        <Popconfirm
+          title="Borrar Tarea"
+          description="¿De seguro quieres eliminar esta tarea?"
+          onConfirm={() => handleDelete(record.id)}
+          okText="Sí"
+          cancelText="No"
+        >
+          <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
+        </Popconfirm>
+      </Space>
+    ),
+    type: "action",
+  });
+
+  const openNotesModal = (notes) => {
+    console.log(notes);
+    const cleanedString = notes.replace(/\\"/g, '"');
+    console.log(cleanedString);
+    setCurrentNotes(JSON.parse(cleanedString));
+    setNotesModalOpen(true);
+  };
+
+  const closeNotesModal = () => {
+    setNotesModalOpen(false);
+    setCurrentNotes([]);
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -102,6 +134,7 @@ const SmartTable = ({
       });
   };
 
+
   const handleEdit = (values) => {
     // Convertir las fechas si es necesario y configurar los valores iniciales
     const dateColumns = schema.fields.filter(
@@ -112,46 +145,54 @@ const SmartTable = ({
         ? dayjs(values[column.dataIndex])
         : null;
     });
-  
+
     // Al editar, configuramos los valores iniciales
     setInitialValues(values);
-    setOpen(true);  // Abrir el modal
+    setTasksModalOpen(true);  // Abrir el modal
   };
-  
+
   useEffect(() => {
-    if (!open) {
+    if (!TasksModal) {
       // Si el modal se cierra, resetear los valores iniciales
       setInitialValues({});
     }
-  }, [open]);  // Resetear cuando el modal se cierra
-  
+  }, [TasksModal]);  // Resetear cuando el modal se cierra
+
 
   return (
     <>
       <FormModal
         onCreate={onCreate}
-        isModalOpen={open}
-        setIsModalOpen={setOpen}
+        isTasksModalOpen={TasksModal}
+        setIsTasksModalOpen={setTasksModalOpen}
         initialValues={initialValues}
         columns={schema.fields}
         modalMode={modalMode} // Pasa el modo del modal
       />
-      <Table 
+      <Table
         columns={columns2}
         pagination={{
-          position: ['bottomCenter'],
+          position: 'BottomCenter',
         }}
         dataSource={data}
-        loading={loading} 
+        loading={loading}
       />
+
+        <NotesListModal
+        initialValues={currentNotes}
+        isNotesModalOpen={NotesModal}
+        setIsNotesModalOpen={setNotesModalOpen}
+        />
     </>
   );
 };
 
 SmartTable.propTypes = {
   schema: PropTypes.object.isRequired, // Se requiere un esquema de columnas
-  open: PropTypes.bool.isRequired, // Se requiere el estado de apertura del modal
-  setOpen: PropTypes.func.isRequired, // Función para cambiar el estado del modal
+  TasksModal: PropTypes.bool.isRequired, // Se requiere el estado de apertura del modal
+  NotesModal: PropTypes.bool.isRequired, // Se requiere el estado de apertura del modal
+  setTasksModalOpen: PropTypes.func.isRequired, // Función para cambiar el estado del modal
+  setNotesModalOpen: PropTypes.func.isRequired, // Función para cambiar el estado del modal
   modalMode: PropTypes.oneOf(["create", "edit"]).isRequired, // El modo del modal (crear o editar)
   selectedRecord: PropTypes.object, // El registro seleccionado para editar
 };

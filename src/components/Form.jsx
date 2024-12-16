@@ -6,7 +6,7 @@ import { toJsonArray } from "@/lib/utils";
 
 let index = 0;
 
-const FormModal = ({ onCreate, isModalOpen, setIsModalOpen, initialValues = {}, columns }) => {
+const FormModal = ({ onCreate, isTasksModalOpen, setIsTasksModalOpen, initialValues = {}, columns }) => {
   const [form] = Form.useForm();
   const [formValues, setFormValues] = useState({});
 
@@ -24,7 +24,7 @@ const FormModal = ({ onCreate, isModalOpen, setIsModalOpen, initialValues = {}, 
     const updatedValues = { ...formValues, ...values };
     setFormValues(updatedValues);
     onCreate(updatedValues);
-    setIsModalOpen(false);  // Cerramos el modal después de crear o editar
+    setIsTasksModalOpen(false);  // Cerramos el modal después de crear o editar
   };
 
   const [dd, setdd] = useState(
@@ -82,12 +82,12 @@ const FormModal = ({ onCreate, isModalOpen, setIsModalOpen, initialValues = {}, 
 
   return (
     <Modal
-      open={isModalOpen}
-      title={initialValues.id ? "Update Record" : "Create a new record"}
-      okText="Save"
+      open={isTasksModalOpen}
+      title={initialValues.id ? "Modificar Tarea" : "Crear una nueva Tarea"}
+      okText="Guardar"
       cancelText="Cancel"
       okButtonProps={{ autoFocus: true, htmlType: "submit" }}
-      onCancel={() => setIsModalOpen(false)}
+      onCancel={() => setIsTasksModalOpen(false)}
       destroyOnClose
       modalRender={(dom) => (
         <Form
@@ -161,7 +161,7 @@ const FormModal = ({ onCreate, isModalOpen, setIsModalOpen, initialValues = {}, 
                     )}
   */                  options={dd[ddSource]?.map((item) => ({
                       label: item.Nombre,
-                      value: item.Correo,
+                      value: item.Nombre,
                     }))}
                   />
                 </Form.Item>

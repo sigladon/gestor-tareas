@@ -14,37 +14,56 @@ class ORM {
 
   // Create a new record
   create(data) {
+    const user = getUser(); // Obtener el rol del usuario
     const id = this.getNextId() || 1;
     data["id"] = id;
     const dataRange = this.sheet.getDataRange();
     const values = dataRange.getValues();
     const headers = values[0];
     const newRow = [];
+    const now = new Date();
+    const formattedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
+  
 
     for (const header of headers) {
-      newRow.push(data[header] || "");
+      if (header === "Creado Por") {
+
+        newRow.push(user.Nombre);
+      } else if (header === "Fecha Registro") {
+        newRow.push(formattedDate);
+      } else if (header === "Notas") {
+        newRow.push("[]");
+      } else {
+       newRow.push(data[header] || "");
+      }
     }
     this.sheet.appendRow(newRow);
     values.push(newRow);
-    return values;
   }
 
-  // Read all records
+// Modificar el método readAll para manejar roles y permisos
   readAll() {
-    const dataRange = this.sheet.getDataRange();
-    return dataRange.getValues();
-    // const headers = values[0];
-    // const records = [];
-    // //Returning data from multi-dimensional array
-    // for (let i = 1; i < values.length; i++) {
-    //   const record = {};
-    //   for (let j = 0; j < headers.length; j++) {
-    //     record[headers[j]] = values[i][j];
-    //   }
-    //   records.push(record);
-    // }
-    // return records;
-  }
+    const user = getUser(); // Obtener el rol del usuario
+    const dataRange = this.sheet.getDataRange().getValues();
+    
+
+    // Si el usuario es administrador, devolver todos los datos
+    if (user.Permisos === "admin") {
+      return dataRange;
+    } else {
+      const headers = dataRange[0];
+     const rows = dataRange.slice(1);
+      const filteredData = rows.filter(row => {
+        const asignedToIndex = row[headers.indexOf("Asignado a")];
+        const createdByIndex = row[headers.indexOf("Creado Por")];
+        return asignedToIndex === user.Nombre || createdByIndex === user.Nombre;
+      });
+
+    // Agregar los encabezados de nuevo a los datos filtrados
+    return [headers, ...filteredData];
+    }
+}
+
 
   // Read a specific record by ID
   readById(id) {
@@ -114,5 +133,9 @@ class ORM {
       }
     }
     return maxId + 1;
+
+    
   }
+
+  
 }
